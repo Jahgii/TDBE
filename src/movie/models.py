@@ -4,6 +4,8 @@ from django.utils.text import slugify
 
 from django.db.models.signals import post_save, pre_save
 
+from .validators import validate_studio_capital
+
 # Create your models here.
 
 GENRE_CHOICES = (
@@ -18,7 +20,7 @@ GENRE_CHOICES = (
 class Movie(models.Model):
     name =      models.CharField(max_length=120, unique=True)
     year =      models.CharField(max_length=120)
-    studio =    models.CharField(max_length=120)
+    studio =    models.CharField(max_length=120, validators=[validate_studio_capital])
     genre =     models.CharField(max_length=120, choices=GENRE_CHOICES)
     slug =      models.SlugField(null=True, blank=True)
     active =    models.BooleanField(default=True)
