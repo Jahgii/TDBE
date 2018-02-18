@@ -19,18 +19,33 @@ GENRE_CHOICES = (
     ('drama','Drama'),
     ('horror','Horror'),
     ('war','War'),
+    ('anime', 'Anime'),
 )
 
+class MovieModelQuerySet(models.query.QuerySet):
+    def active(self):
+        return self.filter(active = True)
+    def disabled(self):
+        return self.filter(active= False)
+
+class MovieModelManager(models.Manager):
+    def get_queryset(self):
+        return MovieModelQuerySet(self.model, using = self._db)
+
+    def all(self, *args, **kwargs):
+        qs = super(MovieModelManager,self).all(*args, **kwargs).filter(active = True)
+        return (qs)
+
 class Movie(models.Model):
-    name =      models.CharField(max_length=120, unique=True)
-    year =      models.CharField(max_length=120)
-    studio =    models.CharField(max_length=120, validators=[validate_studio_capital])
-    genre =     models.CharField(max_length=120, choices=GENRE_CHOICES)
-    slug =      models.SlugField(null=True, blank=True)
-    active =    models.BooleanField(default=True)
-    created =   models.DateField(auto_now=False, auto_now_add=False, default=timezone.now)
-    update =    models.DateTimeField (auto_now=True)
-    timestamp = models.DateTimeField (auto_now_add=True)
+    name        =   models.CharField(max_length=120, unique=True)
+    year        =   models.CharField(max_length=120)
+    studio      =   models.CharField(max_length=120, validators=[validate_studio_capital])
+    genre       =   models.CharField(max_length=120, choices=GENRE_CHOICES)
+    slug        =   models.SlugField(null=True, blank=True)
+    active      =   models.BooleanField(default=True)
+    created     =   models.DateField(auto_now=False, auto_now_add=False, default=timezone.now)
+    update      =   models.DateTimeField (auto_now=True)
+    timestamp   =   models.DateTimeField (auto_now_add=True)
 
     def __str__(self):
         return smart_text(self.name)

@@ -21,4 +21,7 @@ class MovieModelAdmin(admin.ModelAdmin):
     def get_age(self, obj, *args, **kwargs):
         return str(obj.age)
 
+    class Meta:
+        model = Movie
+
 admin.site.register(Movie, MovieModelAdmin)
