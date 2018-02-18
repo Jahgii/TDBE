@@ -2,6 +2,8 @@ from django.db import models
 from django.utils.encoding import smart_text
 from django.utils.text import slugify
 
+from django.db.models.signals import post_save, pre_save
+
 # Create your models here.
 
 GENRE_CHOICES = (
@@ -32,3 +34,16 @@ class Movie(models.Model):
             if self.name:
                 self.slug = slugify (self.name)
         super (Movie, self).save(*args, **kwargs)
+
+def movie_model_post_save_receiver(sender, instance, created, *args, **kwargs):
+    if not instance.slug and instance.name:
+        instance.slug = slugify(instance.name)
+        instance.save()
+
+def movie_model_pre_save_receiver(sender, instance, *args, **kwargs):
+    if not instance.slug and instance.name:
+        instance.slug=slugify(instance.name)
+        instance.save()
+
+post_save.connect(movie_model_post_save_receiver, sender = Movie)
+pre_save.connect(movie_model_pre_save_receiver, sender = Movie)
