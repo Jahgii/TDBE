@@ -6,6 +6,10 @@ from django.db.models.signals import post_save, pre_save
 
 from .validators import validate_studio_capital
 
+from datetime import timedelta, datetime, date
+from django.utils import timezone
+from django.utils.timesince import timesince
+
 # Create your models here.
 
 GENRE_CHOICES = (
@@ -24,7 +28,7 @@ class Movie(models.Model):
     genre =     models.CharField(max_length=120, choices=GENRE_CHOICES)
     slug =      models.SlugField(null=True, blank=True)
     active =    models.BooleanField(default=True)
-    created =   models.DateField(auto_now=True)
+    created =   models.DateField(auto_now=False, auto_now_add=False, default=timezone.now)
     update =    models.DateTimeField (auto_now=True)
     timestamp = models.DateTimeField (auto_now_add=True)
 
@@ -36,6 +40,23 @@ class Movie(models.Model):
             if self.name:
                 self.slug = slugify (self.name)
         super (Movie, self).save(*args, **kwargs)
+
+    @property
+    def age(self):
+        now = datetime.now()
+        print (now)
+        created_time = datetime.combine(self.created,
+        datetime.now().max.time()
+        )
+        print (created_time)
+        try:
+            difference = now - created_time
+            print (difference)
+        except:
+            return "Unknown"
+        if difference <= timedelta(minutes=1):
+            return "Right now"
+        return '{time} ago'.format(time=timesince(created_time).split(', ')[0])
 
 def movie_model_post_save_receiver(sender, instance, created, *args, **kwargs):
     if not instance.slug and instance.name:
