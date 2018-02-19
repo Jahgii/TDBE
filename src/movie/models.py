@@ -37,9 +37,9 @@ class MovieModelManager(models.Manager):
         return (qs)
 
 class Movie(models.Model):
-    name        =   models.CharField(max_length=120, unique=True)
-    year        =   models.CharField(max_length=120)
-    studio      =   models.CharField(max_length=120, validators=[validate_studio_capital])
+    name        =   models.CharField(max_length=120, unique=True, blank=True)
+    year        =   models.CharField(max_length=120, default=2000)
+    studio      =   models.CharField(max_length=120, validators=[validate_studio_capital], default="Studio Ghibli")
     genre       =   models.CharField(max_length=120, choices=GENRE_CHOICES)
     slug        =   models.SlugField(null=True, blank=True)
     active      =   models.BooleanField(default=True)
@@ -61,7 +61,7 @@ class Movie(models.Model):
         now = datetime.now()
         print (now)
         created_time = datetime.combine(self.created,
-        datetime.now().max.time()
+        datetime.now().time()
         )
         print (created_time)
         try:
