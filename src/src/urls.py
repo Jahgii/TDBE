@@ -16,6 +16,11 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
+from movie.views import sql_to_redis, home
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^$', home, name='home'),
+    url(r'^sql_to_redis/', sql_to_redis, name='home'),
+    # url(r'^$', test_redirect, name='test_redirect'),
 ]

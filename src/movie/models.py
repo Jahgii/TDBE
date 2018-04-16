@@ -27,13 +27,17 @@ class MovieModelQuerySet(models.query.QuerySet):
         return self.filter(active = True)
     def disabled(self):
         return self.filter(active= False)
+    def anime(self):
+        return self.filter(genre = "anime")
+    def action(self):
+        return self.filter(genre = "action")
 
 class MovieModelManager(models.Manager):
     def get_queryset(self):
         return MovieModelQuerySet(self.model, using = self._db)
 
     def all(self, *args, **kwargs):
-        qs = super(MovieModelManager,self).all(*args, **kwargs).filter(active = True)
+        qs = super(MovieModelManager,self).all(*args, **kwargs)
         return (qs)
 
 class Movie(models.Model):
@@ -46,6 +50,8 @@ class Movie(models.Model):
     created     =   models.DateField(auto_now=False, auto_now_add=False, default=timezone.now)
     update      =   models.DateTimeField (auto_now=True)
     timestamp   =   models.DateTimeField (auto_now_add=True)
+
+    manager = MovieModelManager()
 
     def __str__(self):
         return smart_text(self.name)
