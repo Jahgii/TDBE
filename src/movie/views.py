@@ -11,14 +11,14 @@ r = redis.Redis (host='localhost', port=6379, db=0)
 def sql_to_redis(request):
     m = Movie.manager.all()
 
-    List_Movies = []
+    List_Movies = {'Movies':{}}
 
     for i in m:
-        List_Movie ={
-        'Movies':{m.get(id=i.id).id: [m.get(id=i.id).name, m.get(id=i.id).year, m.get(id=i.id).studio, m.get(id=i.id).genre, m.get(id=i.id).active, m.get(id=i.id).created]}
-        }
+        List_Movies['Movies'].update(
+        {i.id: [i.name, i.year, i.studio, i.genre, i.active, i.created]}
+        )
 
-        List_Movies.append(List_Movie)
+        #List_Movies.append(List_Movie)
 
     r.set('Movies', List_Movies)
     return redirect('/')

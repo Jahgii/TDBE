@@ -22,5 +22,4 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', home, name='home'),
     url(r'^sql_to_redis/', sql_to_redis, name='home'),
-    # url(r'^$', test_redirect, name='test_redirect'),
 ]
